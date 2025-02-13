@@ -66,6 +66,12 @@
       text-align: center;
       color: #777;
     }
+    /* Feedback section */
+    .feedback-section {
+      margin-top: 30px;
+      padding: 15px;
+      border-top: 1px solid #ddd;
+    }
   </style>
 </head>
 <body>
@@ -90,6 +96,19 @@
     </div>
     <button type="submit" class="button">Reset Password</button>
   </form>
+
+  <!-- Feedback Section -->
+  <div class="feedback-section">
+    <h3>Feedback</h3>
+    <form id="feedback-form">
+      <div class="form-group">
+        <label for="feedback"><i class="fa fa-comment"></i> Your Feedback</label>
+        <textarea class="form-control" id="feedback" placeholder="Share your feedback..." rows="3" required></textarea>
+      </div>
+      <button type="submit" class="button">Submit Feedback</button>
+    </form>
+  </div>
+
   <div class="footer">© 2025 Prince Mohammad Bin Fahd University. All rights reserved.</div>
 </div>
 
@@ -113,6 +132,18 @@
     
     // Simulate redirecting to login page
     window.location.href = 'https://pmu.edu.sa/login';
+  });
+
+  $('#feedback-form').on('submit', function(e) {
+    e.preventDefault();
+    
+    const feedbackText = $('#feedback').val();
+    
+    console.log("User Feedback:", feedbackText);
+    alert('Thank you for your feedback!');
+    
+    // Clear feedback field after submission
+    $('#feedback').val('');
   });
 </script>
 
