@@ -1,151 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PMU Password Reset</title>
-  
-  <!-- Font and Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
-  
-  <style>
-    body {
-      font-family: 'Roboto Slab', serif;
-      background-color: #f4f6f9;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 600px;
-      margin: 50px auto;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-    }
-    .logo {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .logo img {
-      max-width: 150px;
-    }
-    h2 {
-      text-align: center;
-      color: #283747;
-      font-weight: bold;
-    }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    .form-control {
-      height: 45px;
-      font-size: 14px;
-    }
-    .button {
-      display: block;
-      width: 100%;
-      padding: 12px;
-      background-color: #283747;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      text-align: center;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .button:hover {
-      background-color: #1b2d41;
-    }
-    .footer {
-      margin-top: 20px;
-      font-size: 12px;
-      text-align: center;
-      color: #777;
-    }
-    /* Feedback section */
-    .feedback-section {
-      margin-top: 30px;
-      padding: 15px;
-      border-top: 1px solid #ddd;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Auth System</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        .container { max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; }
+        button { width: 100%; padding: 10px; background: #007BFF; color: #fff; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
 </head>
 <body>
 
-<div class="container">
-  <div class="logo">
-    <img src="https://www.pmu.edu.sa/images/c-logo-new.png" alt="PMU Logo">
-  </div>
-  <h2>Password Reset</h2>
-  <form id="reset-form">
-    <div class="form-group">
-      <label for="old-password"><i class="fa fa-lock"></i> Old Password</label>
-      <input type="password" class="form-control" id="old-password" placeholder="Enter your old password" required>
+    <div class="container">
+        <h2>Signup</h2>
+        <input type="email" id="signup-email" placeholder="Email">
+        <input type="password" id="signup-password" placeholder="Password">
+        <button onclick="signup()">Sign Up</button>
     </div>
-    <div class="form-group">
-      <label for="new-password"><i class="fa fa-key"></i> New Password</label>
-      <input type="password" class="form-control" id="new-password" placeholder="Enter your new password" required>
+
+    <div class="container">
+        <h2>Login</h2>
+        <input type="email" id="login-email" placeholder="Email">
+        <input type="password" id="login-password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <button onclick="resetPassword()">Forgot Password?</button>
     </div>
-    <div class="form-group">
-      <label for="confirm-password"><i class="fa fa-check-circle"></i> Confirm New Password</label>
-      <input type="password" class="form-control" id="confirm-password" placeholder="Confirm your new password" required>
-    </div>
-    <button type="submit" class="button">Reset Password</button>
-  </form>
 
-  <!-- Feedback Section -->
-  <div class="feedback-section">
-    <h3>Feedback</h3>
-    <form id="feedback-form">
-      <div class="form-group">
-        <label for="feedback"><i class="fa fa-comment"></i> Your Feedback</label>
-        <textarea class="form-control" id="feedback" placeholder="Share your feedback..." rows="3" required></textarea>
-      </div>
-      <button type="submit" class="button">Submit Feedback</button>
-    </form>
-  </div>
+    <script>
+        // ✅ Your Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCpQ16KcydYMhpDkUF9aSTz-8Q_nt1UWSM",
+            authDomain: "social-eng-aefa7.firebaseapp.com",
+            projectId: "social-eng-aefa7",
+            storageBucket: "social-eng-aefa7.firebasestorage.app",
+            messagingSenderId: "188013698577",
+            appId: "1:188013698577:web:84c2853723bb44ba555bb0",
+            measurementId: "G-NSDLHWHZQ7"
+        };
 
-  <div class="footer">© 2025 Prince Mohammad Bin Fahd University. All rights reserved.</div>
-</div>
+        // 🔥 Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-  $('#reset-form').on('submit', function(e) {
-    e.preventDefault();
-    
-    const oldPassword = $('#old-password').val();
-    const newPassword = $('#new-password').val();
-    const confirmPassword = $('#confirm-password').val();
-    
-    if (newPassword !== confirmPassword) {
-      alert('New passwords do not match. Please try again.');
-      return;
-    }
-    
-    console.log("Old Password:", oldPassword);
-    console.log("New Password:", newPassword);
-    alert('Your password has been reset successfully!');
-    
-    // Simulate redirecting to login page
-    window.location.href = 'https://pmu.edu.sa/login';
-  });
+        // ✅ Signup Function
+        function signup() {
+            const email = document.getElementById("signup-email").value;
+            const password = document.getElementById("signup-password").value;
+            
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(userCredential => {
+                    alert("Signup Successful!");
+                })
+                .catch(error => {
+                    alert(error.message);
+                });
+        }
 
-  $('#feedback-form').on('submit', function(e) {
-    e.preventDefault();
-    
-    const feedbackText = $('#feedback').val();
-    
-    console.log("User Feedback:", feedbackText);
-    alert('Thank you for your feedback!');
-    
-    // Clear feedback field after submission
-    $('#feedback').val('');
-  });
-</script>
+        // ✅ Login Function
+        function login() {
+            const email = document.getElementById("login-email").value;
+            const password = document.getElementById("login-password").value;
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then(userCredential => {
+                    alert("Login Successful!");
+                })
+                .catch(error => {
+                    alert(error.message);
+                });
+        }
+
+        // ✅ Reset Password Function
+        function resetPassword() {
+            const email = document.getElementById("login-email").value;
+            
+            if (!email) {
+                alert("Please enter your email first.");
+                return;
+            }
+
+            auth.sendPasswordResetEmail(email)
+                .then(() => {
+                    alert("Password reset email sent!");
+                })
+                .catch(error => {
+                    alert(error.message);
+                });
+        }
+    </script>
 
 </body>
 </html>
